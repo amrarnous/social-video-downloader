@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Res, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { Controller, Post, Body, Res, HttpStatus, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { VideoDownloaderFacadeService } from './video-downloader-facade.service';
 import { DownloadVideoDto } from './dto/download-video.dto';
 import { Response } from 'express';
@@ -105,5 +105,51 @@ export class VideoDownloadController {
       return res.status(HttpStatus.OK).json(result);
     }
     return res.status(HttpStatus.BAD_REQUEST).json(result);
+  }
+
+  @Post('telegram')
+  @ApiOperation({ summary: 'Get video information for Telegram Bot integration via n8n' })
+  @ApiBody({ type: DownloadVideoDto })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Video information for Telegram', 
+    schema: { 
+      example: { 
+        video: 'https://example.com/video.mp4',
+        caption: 'Video Title',
+        filename: 'video.mp4',
+        title: 'Video Title',
+        platform: 'youtube',
+        status: 'success'
+      } 
+    } 
+  })
+  @ApiResponse({ status: 400, description: 'Invalid URL or unsupported platform' })
+  async downloadForTelegram(@Body() body: DownloadVideoDto) {
+    const result = await this.facade.download(body.url);
+    
+    if (result.status === 'success' && result.downloadUrl) {
+      const sanitizedTitle = (result.title || 'video').replace(/[^a-zA-Z0-9\s\-_]/g, '').trim();
+      const filename = `${sanitizedTitle}.mp4`;
+      
+      return {
+        video: result.downloadUrl,
+        caption: result.title || `Video from ${result.platform}`,
+        filename: filename,
+        title: result.title,
+        platform: result.platform,
+        status: 'success'
+      };
+    }
+    
+    return {
+      status: 'error',
+      platform: result.platform,
+      error: result.error || 'Failed to process video',
+      video: null,
+      caption: null,
+      filename: null,
+      title: null
+    };
   }
 }
