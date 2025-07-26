@@ -30,6 +30,8 @@ export class InstagramDownloadStrategy implements VideoDownloadStrategy {
         error: 'No downloadable video found',
       };
     } catch (error) {
+        console.log(error)
+
       return {
         status: 'error',
         platform: 'instagram',
