@@ -284,6 +284,15 @@ npm run test:e2e
 
 2. **YouTube Download Fails**
    ```json
+   {"status": "error", "platform": "youtube", "error": "Sign in to confirm you're not a bot"}
+   ```
+   **Solution**: YouTube has anti-bot protection. Try:
+   - Using a different public video URL
+   - Waiting a few minutes before retrying
+   - The app automatically tries fallback methods
+   - Some videos may be region-locked or have restrictions
+
+   ```json
    {"status": "error", "platform": "youtube", "error": "Failed to fetch video info"}
    ```
    **Solution**: The video might be private, age-restricted, or region-locked. Try with a different public video.
