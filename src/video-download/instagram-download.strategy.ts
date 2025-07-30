@@ -9,6 +9,9 @@ export class InstagramDownloadStrategy implements VideoDownloadStrategy {
         noCheckCertificate: true,
         preferFreeFormats: true,
         youtubeSkipDashManifest: true,
+      }, {
+        // Use system-installed yt-dlp instead of bundled binary
+        binaryPath: 'yt-dlp'
       });
       if (result && result.url) {
         return {
