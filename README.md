@@ -41,11 +41,71 @@ src/
 
 ## 📋 Prerequisites
 
+### For Docker Installation (Recommended)
+- Docker (version 20.10+)
+- Docker Compose (version 2.0+)
+
+### For Local Development
 - Node.js (v18+ recommended)
 - npm or yarn
 - Git
+- Python 3 (for youtube-dl dependencies)
+- FFmpeg (for video processing)
 
 ## 🛠️ Installation
+
+### Option 1: Docker (Recommended)
+
+**Prerequisites:**
+- Docker (version 20.10+)
+- Docker Compose (version 2.0+)
+
+#### Development Environment
+```bash
+# Clone the repository
+git clone <repository-url>
+cd youtube-downloader
+
+# Start development environment with hot reload
+docker-compose -f docker-compose.dev.yml up --build
+
+# Access the application
+# API: http://localhost:3001
+# Swagger Documentation: http://localhost:3001/api/docs
+```
+
+#### Production Environment
+```bash
+# Start production environment
+docker-compose -f docker-compose.prod.yml up -d --build
+
+# Check service status
+docker-compose -f docker-compose.prod.yml ps
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+```
+
+#### With Additional Services
+```bash
+# Start with Redis caching
+docker-compose --profile cache up -d
+
+# Start with Nginx reverse proxy
+docker-compose --profile proxy up -d
+
+# Start with both Redis and Nginx
+docker-compose --profile cache --profile proxy up -d
+```
+
+### Option 2: Local Development
+
+**Prerequisites:**
+- Node.js (version 18+)
+- npm or yarn
+- Git
+- Python 3 (for youtube-dl dependencies)
+- FFmpeg (for video processing)
 
 1. **Clone the repository**
    ```bash
@@ -66,6 +126,8 @@ src/
 4. **Access the application**
    - API: http://localhost:3001
    - Swagger Documentation: http://localhost:3001/api/docs
+
+> 📖 **For detailed Docker instructions, see [DOCKER.md](./DOCKER.md)**
 
 ## 📚 API Documentation
 
